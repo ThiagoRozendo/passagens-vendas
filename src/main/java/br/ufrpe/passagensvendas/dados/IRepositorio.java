@@ -1,4 +1,5 @@
 package br.ufrpe.passagensvendas.dados;
+
 import java.util.List;
 
 public interface IRepositorio<T> {
