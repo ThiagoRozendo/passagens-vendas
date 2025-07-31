@@ -53,6 +53,11 @@ public class Fachada {
         return controladorVoos.listarVoos();
     }
 
+    public Voo[] listarVoosComoArray() {
+        List<Voo> listaDeVoos = controladorVoos.listarVoos();
+        return listaDeVoos.toArray(new Voo[0]);
+    }
+
     public Voo buscarVooPorId(int id) throws VooNaoEncontradoException {
         return controladorVoos.buscarVooPorId(id);
     }
