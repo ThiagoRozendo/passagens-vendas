@@ -3,8 +3,10 @@ package br.ufrpe.passagensvendas.negocio;
 
 import br.ufrpe.passagensvendas.negocio.beans.*;
 import br.ufrpe.passagensvendas.negocio.controllers.ControladorPassageiros;
+import br.ufrpe.passagensvendas.negocio.controllers.ControladorVoos;
 import br.ufrpe.passagensvendas.negocio.excecoes.PassageiroJaCadastradoException;
 import br.ufrpe.passagensvendas.negocio.excecoes.PassageiroNaoEncontradoException;
+import br.ufrpe.passagensvendas.negocio.excecoes.VooNaoEncontradoException;
 
 import java.util.List;
 
@@ -12,9 +14,12 @@ public class Fachada {
     private static Fachada instance;
 
     private ControladorPassageiros controladorPassageiros;
+    private ControladorVoos controladorVoos;
 
     private Fachada() {
+
         this.controladorPassageiros = ControladorPassageiros.getInstance();
+        this.controladorVoos = ControladorVoos.getInstance();
     }
 
     public static Fachada getInstance() {
@@ -34,5 +39,17 @@ public class Fachada {
 
     public List<Passageiro> listarPassageiros() {
         return controladorPassageiros.listar();
+    }
+
+    public void cadastrarVoo(Voo voo) {
+        controladorVoos.cadastrarVoo(voo);
+    }
+
+    public List<Voo> listarVoos() {
+        return controladorVoos.listarVoos();
+    }
+
+    public Voo buscarVooPorId(int id) throws VooNaoEncontradoException {
+        return controladorVoos.buscarVooPorId(id);
     }
 }
