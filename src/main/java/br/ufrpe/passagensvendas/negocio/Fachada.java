@@ -62,7 +62,7 @@ public class Fachada {
         return controladorVoos.buscarVooPorId(id);
     }
 
-    public void comprarPassagem(String cpfPassageiro, int idVoo) throws VooNaoEncontradoException, PassageiroNaoEncontradoException, AssentosInsuficientesException {
+    public void comprarPassagem(String cpfPassageiro, int idVoo) throws VooNaoEncontradoException, PassageiroNaoEncontradoException, AssentosInsuficientesException, PassageiroJaCadastradoException {
         Passageiro p = buscarPassageiroPorCpf(cpfPassageiro);
         Voo v = buscarVooPorId(idVoo);
         controladorPassagens.comprarPassagem(p, v);
