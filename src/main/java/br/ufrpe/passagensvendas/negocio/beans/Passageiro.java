@@ -37,4 +37,9 @@ public class Passageiro {
     public void setPassaporte(String passaporte) {
         this.passaporte = passaporte;
     }
+
+    @Override
+    public String toString() {
+        return nome + " (CPF: " + cpf + ")";
+    }
 }
