@@ -51,4 +51,9 @@ public abstract class Voo {
     public double getPrecoBase() {
         return precoBase;
     }
+
+    @Override
+    public String toString() {
+        return "Voo " + idVoo + ": " + origem + " -> " + destino;
+    }
 }

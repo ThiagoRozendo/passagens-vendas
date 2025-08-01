@@ -6,6 +6,7 @@ import br.ufrpe.passagensvendas.negocio.beans.Passageiro;
 import br.ufrpe.passagensvendas.negocio.beans.Passagem;
 import br.ufrpe.passagensvendas.negocio.beans.Voo;
 import br.ufrpe.passagensvendas.negocio.excecoes.AssentosInsuficientesException;
+import br.ufrpe.passagensvendas.negocio.excecoes.PassageiroJaCadastradoException;
 
 import java.util.List;
 
@@ -24,10 +25,20 @@ public class ControladorPassagens {
         return instance;
     }
 
-    public void comprarPassagem(Passageiro passageiro, Voo voo) throws AssentosInsuficientesException {
+
+    public void comprarPassagem(Passageiro passageiro, Voo voo) throws AssentosInsuficientesException, PassageiroJaCadastradoException {
         if (passageiro == null || voo == null) {
             throw new IllegalArgumentException("Passageiro e Voo não podem ser nulos.");
         }
+
+        List<Passagem> passagensDoCliente = this.repositorioPassagem.buscarPorCpfPassageiro(passageiro.getCpf());
+
+        for (Passagem passagemExistente : passagensDoCliente) {
+            if (passagemExistente.getVoo().getIdVoo() == voo.getIdVoo()) {
+                throw new PassageiroJaCadastradoException("O passageiro " + passageiro.getNome() + " já possui uma passagem para este voo.");
+            }
+        }
+
 
         if (voo.getAssentosDisponiveis() <= 0) {
             throw new AssentosInsuficientesException("Não há assentos disponíveis para o voo " + voo.getIdVoo() + ".");
