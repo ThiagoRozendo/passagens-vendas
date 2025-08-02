@@ -2,6 +2,7 @@ package br.ufrpe.passagensvendas.GUI;
 
 import br.ufrpe.passagensvendas.negocio.Fachada;
 import br.ufrpe.passagensvendas.negocio.beans.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,6 +55,14 @@ public class ControladorTelaPrincipal {
     private ComboBox<Voo> comboVoo;
     @FXML
     private Label lblCompraStatus;
+    @FXML
+    private TableView<Passagem> tabelaReservas;
+    @FXML
+    private TableColumn<Passagem, Integer> colReservaId;
+    @FXML
+    private TableColumn<Passagem, String> colReservaPassageiro, colReservaCpf, colReservaVoo;
+    @FXML
+    private TableColumn<Passagem, Double> colReservaValor;
 
     @FXML
     public void initialize() {
@@ -95,6 +104,11 @@ public class ControladorTelaPrincipal {
         colPassageiroNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colPassageiroCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colPassageiroPassaporte.setCellValueFactory(new PropertyValueFactory<>("passaporte"));
+        colReservaId.setCellValueFactory(new PropertyValueFactory<>("idPassagem"));
+        colReservaPassageiro.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassageiro().getNome()));
+        colReservaCpf.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassageiro().getCpf()));
+        colReservaVoo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVoo().toString()));
+        colReservaValor.setCellValueFactory(new PropertyValueFactory<>("valorPago"));
     }
 
     @FXML
@@ -137,6 +151,7 @@ public class ControladorTelaPrincipal {
         }
         atualizarTabelaVoos();
         atualizarTabelaPassageiros();
+        atualizarTabelaReservas();
     }
 
     private void popularComboBoxes() {
@@ -160,6 +175,27 @@ public class ControladorTelaPrincipal {
         }
     }
 
+    @FXML
+    void handleComprarPassagem(ActionEvent event) {
+        try {
+            Passageiro p = comboPassageiro.getValue();
+            Voo v = comboVoo.getValue();
+            if (p == null || v == null) {
+                throw new Exception("Selecione um passageiro e um voo.");
+            }
+            fachada.comprarPassagem(p.getCpf(), v.getIdVoo());
+            definirStatusLabel(lblCompraStatus, "Passagem comprada com sucesso!", Color.GREEN);
+            atualizarTabelaVoos();
+        } catch (Exception e) {
+            definirStatusLabel(lblCompraStatus, "Erro: " + e.getMessage(), Color.RED);
+        }
+    }
+
+    @FXML
+    void handleAtualizarReservas(ActionEvent event) {
+        atualizarTabelaReservas();
+    }
+
     private void atualizarTabelaVoos() {
         tabelaVoos.setItems(FXCollections.observableArrayList(fachada.listarVoos()));
         comboVoo.setItems(FXCollections.observableArrayList(fachada.listarVoos()));
@@ -168,6 +204,10 @@ public class ControladorTelaPrincipal {
     private void atualizarTabelaPassageiros() {
         tabelaPassageiros.setItems(FXCollections.observableArrayList(fachada.listarPassageiros()));
         comboPassageiro.setItems(FXCollections.observableArrayList(fachada.listarPassageiros()));
+    }
+
+    private void atualizarTabelaReservas() {
+        tabelaReservas.setItems(FXCollections.observableArrayList(fachada.listarReservas()));
     }
 
     private void limparCamposVoo() {
